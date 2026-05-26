@@ -88,9 +88,9 @@ public class MeetingRestController {
             @RequestBody ParticipantRequest request
     ) {
 
-        System.out.println("JOIN ENDPOINT HIT");
+//        System.out.println("JOIN ENDPOINT HIT");
 
-        System.out.println("ID = " + id);
+//        System.out.println("ID = " + id);
 
         Meeting meeting =
                 meetingService.joinMeeting(id, request.getUser());

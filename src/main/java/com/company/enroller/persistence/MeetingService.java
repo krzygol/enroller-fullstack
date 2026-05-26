@@ -116,12 +116,12 @@ public class MeetingService {
 
     public Meeting joinMeeting(long meetingId, String login) {
 
-        System.out.println("LOGIN = " + login);
-        System.out.println("meetingId = " + meetingId);
+//        System.out.println("LOGIN = " + login);
+//        System.out.println("meetingId = " + meetingId);
 
         Meeting meeting = this.findById(meetingId);
 
-        System.out.println("MEETING = " + meeting);
+//        System.out.println("MEETING = " + meeting);
 
         if (meeting == null) {
             return null;
@@ -130,7 +130,7 @@ public class MeetingService {
         Participant participant =
                 participantService.findByLogin(login);
 
-        System.out.println("PARTICIPANT = " + participant);
+//        System.out.println("PARTICIPANT = " + participant);
 
         if (participant == null) {
             return null;
