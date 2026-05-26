@@ -2,6 +2,7 @@ package com.company.enroller.controllers;
 
 import com.company.enroller.model.Meeting;
 import com.company.enroller.model.Participant;
+import com.company.enroller.model.ParticipantRequest;
 import com.company.enroller.persistence.MeetingService;
 import com.company.enroller.persistence.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class MeetingRestController {
         return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
     }
 
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getMeeting(@PathVariable("id") long id) {
         Meeting meeting = meetingService.findById(id);
@@ -46,15 +48,15 @@ public class MeetingRestController {
         return new ResponseEntity(meeting, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteMeeting(@PathVariable("id") long id) {
-        Meeting meeting = meetingService.findById(id);
-        if (meeting == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-        meetingService.delete(meeting);
-        return new ResponseEntity<Meeting>(meeting, HttpStatus.NO_CONTENT);
-    }
+//    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+//    public ResponseEntity<?> deleteMeeting(@PathVariable("id") long id) {
+//        Meeting meeting = meetingService.findById(id);
+//        if (meeting == null) {
+//            return new ResponseEntity(HttpStatus.NOT_FOUND);
+//        }
+//        meetingService.delete(meeting);
+//        return new ResponseEntity<Meeting>(meeting, HttpStatus.NO_CONTENT);
+//    }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> addMeeting(@RequestBody Meeting meeting) {
@@ -76,4 +78,66 @@ public class MeetingRestController {
         meetingService.update(meeting);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @RequestMapping(
+            value = "/{id}/join",
+            method = RequestMethod.POST
+    )
+    public ResponseEntity<Meeting> joinMeeting(
+            @PathVariable long id,
+            @RequestBody ParticipantRequest request
+    ) {
+
+        System.out.println("JOIN ENDPOINT HIT");
+
+        System.out.println("ID = " + id);
+
+        Meeting meeting =
+                meetingService.joinMeeting(id, request.getUser());
+
+        if (meeting == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(meeting);
+    }
+
+    @RequestMapping(
+            value = "/{id}/leave",
+            method = RequestMethod.POST
+    )
+    public ResponseEntity<Meeting> leaveMeeting(
+            @PathVariable long id,
+            @RequestBody ParticipantRequest request
+    ) {
+
+        Meeting meeting =
+                meetingService.leaveMeeting(id, request.getUser());
+
+        if (meeting == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(meeting);
+    }
+
+    @RequestMapping(
+            value = "/{id}",
+            method = RequestMethod.DELETE
+    )
+    public ResponseEntity<Void> deleteMeeting(
+            @PathVariable long id
+    ) {
+
+        boolean deleted =
+                meetingService.deleteMeeting(id);
+
+        if (!deleted) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+
 }

@@ -56,6 +56,54 @@ export default function MeetingsPage({username}) {
     //     setMeetings(nextMeetings);
     // }
 
+    async function handleJoinMeeting(meeting) {
+
+        const response = await fetch(`/api/meetings/${meeting.id}/join`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user: username
+            })
+        });
+
+        if (response.ok) {
+
+            const updatedMeeting = await response.json();
+
+            const nextMeetings = meetings.map(m =>
+                m.id === updatedMeeting.id ? updatedMeeting : m
+            );
+
+            setMeetings(nextMeetings);
+        }
+    }
+
+    async function handleLeaveMeeting(meeting) {
+
+        const response = await fetch(`/api/meetings/${meeting.id}/leave`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user: username
+            })
+        });
+
+        if (response.ok) {
+
+            const updatedMeeting = await response.json();
+
+            const nextMeetings = meetings.map(m =>
+                m.id === updatedMeeting.id ? updatedMeeting : m
+            );
+
+            setMeetings(nextMeetings);
+        }
+    }
+
     return (
         <div>
             <h2>Zajęcia ({meetings.length})</h2>
@@ -65,8 +113,14 @@ export default function MeetingsPage({username}) {
                     : <button onClick={() => setAddingNewMeeting(true)}>Dodaj nowe spotkanie</button>
             }
             {meetings.length > 0 &&
-                <MeetingsList meetings={meetings} username={username}
-                              onDelete={handleDeleteMeeting}/>}
+                <MeetingsList
+                    meetings={meetings}
+                    username={username}
+                    onDelete={handleDeleteMeeting}
+                    onJoin={handleJoinMeeting}
+                    onLeave={handleLeaveMeeting}
+                />
+            }
 
         </div>
     )
