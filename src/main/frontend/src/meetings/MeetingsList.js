@@ -13,6 +13,7 @@ export default function MeetingsList({
             <thead>
             <tr>
                 <th>Nazwa spotkania</th>
+                <th>Data</th>
                 <th>Opis</th>
                 <th>Uczestnicy</th>
                 <th>Akcja</th>
@@ -33,6 +34,8 @@ export default function MeetingsList({
                         <tr key={index}>
 
                             <td>{meeting.title}</td>
+
+                            <td>{meeting.date}</td>
 
                             <td>{meeting.description}</td>
 
